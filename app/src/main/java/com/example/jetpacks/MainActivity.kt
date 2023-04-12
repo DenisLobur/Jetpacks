@@ -13,6 +13,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
@@ -29,6 +31,7 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import kotlin.random.Random
 
 class MainActivity : ComponentActivity() {
   override fun onCreate(savedInstanceState: Bundle?) {
@@ -97,8 +100,25 @@ class MainActivity : ComponentActivity() {
 //        ImageCard(painter = painter, contentDescription = description, title = title)
 //      }
 
-      CustomText(fontFamily = fontFamily, context = this@MainActivity)
-
+      //CustomText(fontFamily = fontFamily, context = this@MainActivity)
+      Column(Modifier.fillMaxSize()) {
+        val color = remember {
+          mutableStateOf(Color.Yellow)
+        }
+        ColorBox(
+          Modifier
+            .weight(1f)
+            .fillMaxSize()
+        ) {
+          color.value = it
+        }
+        Box(
+          modifier = Modifier
+            .background(color.value)
+            .weight(1f)
+            .fillMaxSize()
+        )
+      }
     }
   }
 }
@@ -189,4 +209,24 @@ fun CustomText(
       textDecoration = TextDecoration.Underline
     )
   }
+}
+
+@Composable
+fun ColorBox(
+  modifier: Modifier = Modifier,
+  updateColor: (Color) -> Unit
+) {
+  Box(modifier = modifier
+    .background(Color.Red)
+    .clickable {
+      updateColor(
+        Color(
+          Random.nextFloat(),
+          Random.nextFloat(),
+          Random.nextFloat(),
+          1f
+        )
+      )
+    }
+  )
 }
